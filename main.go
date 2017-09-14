@@ -28,12 +28,13 @@ func getStartTime(log string) string {
     pattern := "'StartTime'>"
 
     i := strings.Index(log, pattern)
+    if i >= 0 {
+        start := i + len(pattern)
+        out := log[start:start+30]
+        return out
+    }
 
-    start := i + len(pattern)
-
-    out := log[start:start+30]
-
-    return out
+    return ""
 }
 
 func getHumanTime(t time.Time) string {
@@ -69,5 +70,11 @@ func main() {
     }
 
     startTime := getStartTime(out)
-    printWorkTime(startTime)
+
+    if startTime != "" {
+        printWorkTime(startTime)
+        return
+    }
+
+    fmt.Println("Can't get start time in Windows event log")
 }
